@@ -1,0 +1,63 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.351355499516678,
+        "y": 4.90226840258472
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8446249331342255,
+        "y": 5.152990587671317
+      },
+      "isLocked": false,
+      "linkedName": "Stage Shoot"
+    },
+    {
+      "anchor": {
+        "x": 2.6905572888341873,
+        "y": 4.217553350812114
+      },
+      "prevControl": {
+        "x": 1.5846592500986658,
+        "y": 5.0446249106572525
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Far Left / Podium"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": -23.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -20.95577673063214,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "5 Note",
+  "previewStartingState": {
+    "rotation": -15.751173663452867,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}
