@@ -13,10 +13,9 @@
 
 package frc.robot.subsystems.drive;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
-
-import com.ctre.phoenix6.hardware.TalonFX;
 
 public interface ModuleIO {
   @AutoLog
@@ -48,10 +47,15 @@ public interface ModuleIO {
   /** Enable or disable brake mode on the turn motor. */
   public default void setTurnBrakeMode(boolean enable) {}
 
-  public default TalonFX getDriveTalon() {return null;}
+  public default TalonFX getDriveTalon() {
+    return null;
+  }
 
-  public default boolean getDriveMotorDisconnect() {return false;}
+  public default boolean getDriveMotorDisconnect() {
+    return false;
+  }
 
-  public default boolean getTurnMotorDisconnect() {return false;}
-
+  public default boolean getTurnMotorDisconnect() {
+    return false;
+  }
 }

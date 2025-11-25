@@ -10,39 +10,24 @@
 
 package frc.robot;
 
-
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.Mode;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTBSwerve;
-import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.NoteVisualizer;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -55,13 +40,15 @@ public class RobotContainer {
   private final Drive drive;
   private final NoteVisualizer visualizer = new NoteVisualizer();
 
-  //divides the movement by the value of drive ratio.
+  // divides the movement by the value of drive ratio.
   private double driveRatio = 1.0;
   private boolean slowMode = false;
 
   // Controllers
-  private final CommandXboxController driverController = new CommandXboxController(0); //Change when done
-  private final CommandXboxController operatorController = new CommandXboxController(1); //Change when done
+  private final CommandXboxController driverController =
+      new CommandXboxController(0); // Change when done
+  private final CommandXboxController operatorController =
+      new CommandXboxController(1); // Change when done
 
   private final CommandXboxController outreachController = new CommandXboxController(2);
 
@@ -75,9 +62,9 @@ public class RobotContainer {
 
   public double rotMultiplier = 1;
 
-  public enum shootPositions{
+  public enum shootPositions {
     STOW(-12, 0.0),
-    SUBWOOFER(-4.7, 25.0),    
+    SUBWOOFER(-4.7, 25.0),
     PODIUM(-8, 25.0),
     AMP(7.5, 0.0),
     STAGE(-8.9, 30.0),
@@ -88,19 +75,20 @@ public class RobotContainer {
 
     private double shootSpeed;
     private double shootAngle;
-    private shootPositions(double shootAngle, double shootSpeed){
-        this.shootSpeed = shootSpeed;
-        this.shootAngle = shootAngle;
+
+    private shootPositions(double shootAngle, double shootSpeed) {
+      this.shootSpeed = shootSpeed;
+      this.shootAngle = shootAngle;
     }
 
-    public double getShootSpeed(){
-        return shootSpeed;
+    public double getShootSpeed() {
+      return shootSpeed;
     }
 
-    public double getShootAngle(){
-        return shootAngle;
+    public double getShootAngle() {
+      return shootAngle;
     }
-}
+  }
 
   public static shootPositions shootEnum = shootPositions.SUBWOOFER;
 
@@ -112,7 +100,6 @@ public class RobotContainer {
         drive =
             new Drive(
                 new GyroIOPigeon2(),
-                new VisionIOLimelight(),
                 new ModuleIOTBSwerve(0),
                 new ModuleIOTBSwerve(1),
                 new ModuleIOTBSwerve(2),
@@ -124,11 +111,10 @@ public class RobotContainer {
         drive =
             new Drive(
                 new GyroIO() {},
-                new VisionIO() {},
-                new ModuleIOSim(),
-                new ModuleIOSim(),
-                new ModuleIOSim(),
-                new ModuleIOSim());
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {});
         break;
 
       default:
@@ -136,7 +122,6 @@ public class RobotContainer {
         drive =
             new Drive(
                 new GyroIO() {},
-                new VisionIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {},
@@ -144,10 +129,10 @@ public class RobotContainer {
         break;
     }
 
-    //Visualize command scheduler routine in SmartDashboard, turn on only for debugging
-    //SmartDashboard.putData("Commands", CommandScheduler.getInstance());
+    // Visualize command scheduler routine in SmartDashboard, turn on only for debugging
+    // SmartDashboard.putData("Commands", CommandScheduler.getInstance());
 
-    //Register NamedCommands for use in PathPlanner
+    // Register NamedCommands for use in PathPlanner
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -157,7 +142,6 @@ public class RobotContainer {
     //     new FeedForwardCharacterization(
     //         drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
 
-   
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -171,8 +155,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     Trigger armAmp = new Trigger(() -> shootEnum == shootPositions.AMP);
     armAmp
-      .onTrue(new InstantCommand(() -> rotMultiplier = 0.5))
-      .onFalse(new InstantCommand(() -> rotMultiplier = 1));
+        .onTrue(new InstantCommand(() -> rotMultiplier = 0.5))
+        .onFalse(new InstantCommand(() -> rotMultiplier = 1));
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
@@ -198,18 +182,24 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     if (autoChooser.get() != null) {
       return autoChooser.get();
-      // .beforeStarting(new InstantCommand(() -> intake.setBarAngle(Constants.INTAKE_LOW_POSITION)));
+      // .beforeStarting(new InstantCommand(() ->
+      // intake.setBarAngle(Constants.INTAKE_LOW_POSITION)));
     }
     return null;
   }
 
   /**
    * Rumble driver controller for 1 second
+   *
    * @return driverRumbleCommand
    */
   private Command driverRumbleCommand() {
     return Commands.startEnd(
-      () -> {driverController.getHID().setRumble(RumbleType.kBothRumble, 1.0);},
-      () -> {driverController.getHID().setRumble(RumbleType.kBothRumble, 0.0);});
+        () -> {
+          driverController.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+        },
+        () -> {
+          driverController.getHID().setRumble(RumbleType.kBothRumble, 0.0);
+        });
   }
 }

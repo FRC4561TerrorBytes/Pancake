@@ -28,5 +28,7 @@ public interface GyroIO {
 
   public default void resetGyro() {}
 
-  public default boolean getDisconnect() {return false;}
+  public default boolean getDisconnect() {
+    return false;
+  }
 }

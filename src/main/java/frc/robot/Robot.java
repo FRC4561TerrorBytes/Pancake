@@ -10,16 +10,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
-import edu.wpi.first.net.PortForwarder;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -37,8 +35,6 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotInit() {
-    PortForwarder.add(5801, "limelight.local", 5801);
-    PortForwarder.add(5802, "limelight.local", 5802);
 
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -93,7 +89,6 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during all modes. */
   @Override
-
   public void robotPeriodic() {
 
     // Runs the Scheduler. This is responsible for polling buttons, adding
@@ -111,7 +106,7 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
-    robotContainer.disconnectActive(); //Potentially add this to robotPeriodic
+    // Potentially add this to robotPeriodic
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -133,7 +128,7 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-   // This makes sure that the autonomous stops running when
+    // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.

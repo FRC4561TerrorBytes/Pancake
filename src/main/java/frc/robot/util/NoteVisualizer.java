@@ -13,11 +13,6 @@
 
 package frc.robot.util;
 
-import java.util.Set;
-import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -30,6 +25,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import java.util.Set;
+import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class NoteVisualizer {
   private static final Translation3d blueSpeaker = new Translation3d(0.225, 5.55, 2.1);
@@ -41,7 +39,12 @@ public class NoteVisualizer {
   }
 
   public static Command shoot(double shotSpeedMPS, double angle, double height, double xOffset) {
-    Transform3d launcherTransformNew = new Transform3d(-xOffset, 0, height, new Rotation3d(0.0, Units.degreesToRadians(-angle), Units.degreesToRadians(180.0)));
+    Transform3d launcherTransformNew =
+        new Transform3d(
+            -xOffset,
+            0,
+            height,
+            new Rotation3d(0.0, Units.degreesToRadians(-angle), Units.degreesToRadians(180.0)));
     return new ScheduleCommand( // Branch off and exit immediately
         Commands.defer(
                 () -> {
@@ -54,7 +57,8 @@ public class NoteVisualizer {
                       new Pose3d(isRed ? redSpeaker : blueSpeaker, startPose.getRotation());
 
                   final double duration =
-                      startPose.getTranslation().getDistance(endPose.getTranslation()) / shotSpeedMPS;
+                      startPose.getTranslation().getDistance(endPose.getTranslation())
+                          / shotSpeedMPS;
                   final Timer timer = new Timer();
                   timer.start();
                   return Commands.run(
