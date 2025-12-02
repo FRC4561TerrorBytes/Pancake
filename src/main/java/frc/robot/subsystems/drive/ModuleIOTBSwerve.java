@@ -14,6 +14,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -50,7 +51,6 @@ public class ModuleIOTBSwerve implements ModuleIO {
 
   private final boolean isTurnMotorInverted = true;
   private InvertedValue isDriveMotorInverted = InvertedValue.CounterClockwise_Positive;
-  private final Rotation2d absoluteEncoderOffset;
 
   /**
    * Create swerve module object, using hardware specific constants
@@ -58,13 +58,16 @@ public class ModuleIOTBSwerve implements ModuleIO {
    * @param index
    */
   public ModuleIOTBSwerve(int index) {
+    var canConfig = new CANcoderConfiguration();
+    var turnConfig = new SparkMaxConfig();
+    var driveConfig = new TalonFXConfiguration();
     switch (index) {
       case 0:
         driveTalon = new TalonFX(Constants.FRONT_LEFT_DRIVE_MOTOR);
         isDriveMotorInverted = Constants.FRONT_LEFT_DRIVE_MOTOR_INVERTED;
         turnSparkMax = new SparkMax(Constants.FRONT_LEFT_STEER_MOTOR, MotorType.kBrushless);
         cancoder = new CANcoder(Constants.FRONT_LEFT_STEER_ENCODER);
-        absoluteEncoderOffset = new Rotation2d(Constants.FRONT_LEFT_STEER_OFFSET);
+        canConfig.MagnetSensor.MagnetOffset = Constants.FRONT_LEFT_STEER_OFFSET;
         moduleLabel = "Module0";
         break;
       case 1:
@@ -72,7 +75,7 @@ public class ModuleIOTBSwerve implements ModuleIO {
         isDriveMotorInverted = Constants.FRONT_RIGHT_DRIVE_MOTOR_INVERTED;
         turnSparkMax = new SparkMax(Constants.FRONT_RIGHT_STEER_MOTOR, MotorType.kBrushless);
         cancoder = new CANcoder(Constants.FRONT_RIGHT_STEER_ENCODER);
-        absoluteEncoderOffset = new Rotation2d(Constants.FRONT_RIGHT_STEER_OFFSET);
+        canConfig.MagnetSensor.MagnetOffset = Constants.FRONT_RIGHT_STEER_OFFSET;
         moduleLabel = "Module1";
         break;
       case 2:
@@ -80,7 +83,7 @@ public class ModuleIOTBSwerve implements ModuleIO {
         isDriveMotorInverted = Constants.BACK_LEFT_DRIVE_MOTOR_INVERTED;
         turnSparkMax = new SparkMax(Constants.BACK_LEFT_STEER_MOTOR, MotorType.kBrushless);
         cancoder = new CANcoder(Constants.BACK_LEFT_STEER_ENCODER);
-        absoluteEncoderOffset = new Rotation2d(Constants.BACK_LEFT_STEER_OFFSET);
+        canConfig.MagnetSensor.MagnetOffset = Constants.BACK_LEFT_STEER_OFFSET;
         moduleLabel = "Module2";
         break;
       case 3:
@@ -88,17 +91,18 @@ public class ModuleIOTBSwerve implements ModuleIO {
         isDriveMotorInverted = Constants.BACK_RIGHT_DRIVE_MOTOR_INVERTED;
         turnSparkMax = new SparkMax(Constants.BACK_RIGHT_STEER_MOTOR, MotorType.kBrushless);
         cancoder = new CANcoder(Constants.BACK_RIGHT_STEER_ENCODER);
-        absoluteEncoderOffset = new Rotation2d(Constants.BACK_RIGHT_STEER_OFFSET);
+        canConfig.MagnetSensor.MagnetOffset = Constants.BACK_RIGHT_STEER_OFFSET;
         moduleLabel = "Module3";
         break;
       default:
         throw new RuntimeException("Invalid module index");
     }
 
-    cancoder.getConfigurator().apply(new CANcoderConfiguration());
+    
+    canConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    cancoder.getConfigurator().apply(canConfig);
 
     // Set current limit configs for drive motor
-    var driveConfig = new TalonFXConfiguration();
     driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     driveConfig.CurrentLimits.SupplyCurrentLimit = Constants.DRIVE_CURRENT_LIMIT;
     driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -107,7 +111,6 @@ public class ModuleIOTBSwerve implements ModuleIO {
 
     setDriveBrakeMode(true, isDriveMotorInverted);
 
-    var turnConfig = new SparkMaxConfig();
     turnConfig.idleMode(IdleMode.kBrake);
     turnConfig.voltageCompensation(12.0);
     turnConfig.inverted(false);
@@ -153,8 +156,7 @@ public class ModuleIOTBSwerve implements ModuleIO {
 
     // Turn motor / CANcoder positions
     inputs.turnAbsolutePosition =
-        Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble())
-            .minus(absoluteEncoderOffset);
+        Rotation2d.fromRotations(turnAbsolutePosition.getValueAsDouble());
     inputs.turnPosition =
         Rotation2d.fromRotations(turnSparkMax.getEncoder().getPosition() / TURN_GEAR_RATIO);
     inputs.turnVelocityRadPerSec =

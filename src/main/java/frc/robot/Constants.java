@@ -97,52 +97,47 @@ public final class Constants {
   // If the modules are not aligned the offsets are wrong, repeat step 5.
 
   // MODULE 0
-  public static final int FRONT_LEFT_DRIVE_MOTOR = 1; // 5 for fulcrum
-  public static final int FRONT_LEFT_STEER_MOTOR = 2; // 6 for fulcrum
-  public static final int FRONT_LEFT_STEER_ENCODER = 21; // 23 for fulcrum
+  public static final int FRONT_LEFT_DRIVE_MOTOR = 2; // 5 for fulcrum
+  public static final int FRONT_LEFT_STEER_MOTOR = 6; // 6 for fulcrum
+  public static final int FRONT_LEFT_STEER_ENCODER = 10; // 23 for fulcrum
   public static final InvertedValue FRONT_LEFT_DRIVE_MOTOR_INVERTED =
       InvertedValue.CounterClockwise_Positive; // counter
   // clockwise
   // for
   // fulcrum
   public static final boolean FRONT_LEFT_TURN_MOTOR_INVERTED = true;
-  public static final double FRONT_LEFT_STEER_OFFSET =
-      3.0942050207490253 - 1.3562047880745938 - 3.1400586728019073; // 0.2393010029 Fulcrum
-  // drivebase
+  public static final double FRONT_LEFT_STEER_OFFSET = -0.3198;
 
   // MODULE 1
-  public static final int FRONT_RIGHT_DRIVE_MOTOR = 7; // 3 for fulcrum
-  public static final int FRONT_RIGHT_STEER_MOTOR = 8; // 4 for fulcrum
-  public static final int FRONT_RIGHT_STEER_ENCODER = 24; // 22 for fulcrum
+  public static final int FRONT_RIGHT_DRIVE_MOTOR = 3; // 3 for fulcrum
+  public static final int FRONT_RIGHT_STEER_MOTOR = 7; // 4 for fulcrum
+  public static final int FRONT_RIGHT_STEER_ENCODER = 11; // 22 for fulcrum
   public static final InvertedValue FRONT_RIGHT_DRIVE_MOTOR_INVERTED =
       InvertedValue.CounterClockwise_Positive;
   public static final boolean FRONT_RIGHT_TURN_MOTOR_INVERTED = true;
-  public static final double FRONT_RIGHT_STEER_OFFSET =
-      2.926237425765628 - 1.5916741403051204; // 1.73646625; Fulcrum drivebase
+  public static final double FRONT_RIGHT_STEER_OFFSET = 0.040039;
   // MODULE 2
-  public static final int BACK_LEFT_DRIVE_MOTOR = 3; // 7 for fulcrum
-  public static final int BACK_LEFT_STEER_MOTOR = 4; // 8 for fulcrum
-  public static final int BACK_LEFT_STEER_ENCODER = 22; // 24 for fulcum
+  public static final int BACK_LEFT_DRIVE_MOTOR = 5; // 7 for fulcrum
+  public static final int BACK_LEFT_STEER_MOTOR = 9; // 8 for fulcrum
+  public static final int BACK_LEFT_STEER_ENCODER = 13; // 24 for fulcum
   public static final InvertedValue BACK_LEFT_DRIVE_MOTOR_INVERTED =
-      InvertedValue.Clockwise_Positive; // counter
+      InvertedValue.CounterClockwise_Positive; // counter
   // clockwise
   // for
   // fulcrum
   public static final boolean BACK_LEFT_TURN_MOTOR_INVERTED = true;
-  public static final double BACK_LEFT_STEER_OFFSET =
-      3.118413296320047 + 0.6981309039394283; // -2.5632818; Fulcrum drivebase
+  public static final double BACK_LEFT_STEER_OFFSET = 0.144775;
 
   // MODULE 3
-  public static final int BACK_RIGHT_DRIVE_MOTOR = 5; // 1 for fulcrum
-  public static final int BACK_RIGHT_STEER_MOTOR = 6; // 2 for fulcrum
-  public static final int BACK_RIGHT_STEER_ENCODER = 23; // 21 for fulcrum
+  public static final int BACK_RIGHT_DRIVE_MOTOR = 4; // 1 for fulcrum
+  public static final int BACK_RIGHT_STEER_MOTOR = 8; // 2 for fulcrum
+  public static final int BACK_RIGHT_STEER_ENCODER = 12; // 21 for fulcrum
   public static final InvertedValue BACK_RIGHT_DRIVE_MOTOR_INVERTED =
-      InvertedValue.Clockwise_Positive; // clockwise
+      InvertedValue.CounterClockwise_Positive; // clockwise
   // for //
   // fulcrum
   public static final boolean BACK_RIGHT_TURN_MOTOR_INVERTED = true;
-  public static final double BACK_RIGHT_STEER_OFFSET =
-      -2.8760435166685516 + 2.21489779708984; // -2.1184274; Fulcrum drivebase
+  public static final double BACK_RIGHT_STEER_OFFSET = 0.358398;
 
   public static final double ARM_CURRENT_LIMIT = 40.0;
 
