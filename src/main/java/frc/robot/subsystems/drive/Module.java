@@ -43,24 +43,31 @@ public class Module {
 
     // Switch constants based on mode (the physics simulator is treated as a
     // separate robot with different tuning)
-    switch (Constants.currentMode) {
-      case REAL:
-      case REPLAY:
-        driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
+    // switch (Constants.currentMode) {
+    //   case REAL:
+    //     driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
+    //     driveFeedback = new PIDController(0.05, 0.0, 0.0);
+    //     turnFeedback = new PIDController(0.25, 0.0, 0.1);
+    //     break;
+    //   case REPLAY:
+    //     driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
+    //     driveFeedback = new PIDController(0.05, 0.0, 0.0);
+    //     turnFeedback = new PIDController(7.0, 0.0, 0.0);
+    //     break;
+    //   case SIM:
+    //     driveFeedforward = new SimpleMotorFeedforward(0.0, 0.13);
+    //     driveFeedback = new PIDController(0.1, 0.0, 0.0);
+    //     turnFeedback = new PIDController(10.0, 0.0, 0.0);
+    //     break;
+    //   default:
+    //     driveFeedforward = new SimpleMotorFeedforward(0.25, 2.5);
+    //     driveFeedback = new PIDController(1, 0.0, 0.0);
+    //     turnFeedback = new PIDController(1.8, 0.0, 0.1);
+    //     break;
+    // }
+    driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
         driveFeedback = new PIDController(0.05, 0.0, 0.0);
-        turnFeedback = new PIDController(7.0, 0.0, 0.0);
-        break;
-      case SIM:
-        driveFeedforward = new SimpleMotorFeedforward(0.0, 0.13);
-        driveFeedback = new PIDController(0.1, 0.0, 0.0);
-        turnFeedback = new PIDController(10.0, 0.0, 0.0);
-        break;
-      default:
-        driveFeedforward = new SimpleMotorFeedforward(0.25, 2.5);
-        driveFeedback = new PIDController(1, 0.0, 0.0);
-        turnFeedback = new PIDController(1.8, 0.0, 0.1);
-        break;
-    }
+        turnFeedback = new PIDController(0.25, 0.0, 0.1);
 
     turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
     setBrakeMode(true);
@@ -101,7 +108,8 @@ public class Module {
   public SwerveModuleState runSetpoint(SwerveModuleState state) {
     // Optimize state based on current angle
     // Controllers run in "periodic" when the setpoint is not null
-    var optimizedState = SwerveModuleState.optimize(state, getAngle());
+    //var optimizedState = SwerveModuleState.optimize(state, getAngle());
+    var optimizedState = state;
 
     // Update setpoints, controllers run in "periodic"
     angleSetpoint = optimizedState.angle;
