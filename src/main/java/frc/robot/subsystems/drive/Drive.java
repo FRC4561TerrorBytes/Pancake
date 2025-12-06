@@ -35,7 +35,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -56,18 +55,13 @@ public class Drive extends SubsystemBase {
   private static final double DRIVE_BASE_RADIUS =
       Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
   private static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
-  private static final Translation2d speakerPosition = new Translation2d(0.0, 5.55);
 
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
 
-  private BuiltInAccelerometer accelerometer = new BuiltInAccelerometer();
-
   private final SysIdRoutine sysId;
 
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
-  private boolean[] turnCANDisconnect = new boolean[4];
-  private boolean[] driveCANDisconnect = new boolean[4];
 
   private boolean modulesOrienting = false;
   private SwerveSetpoint currentSetpoint =
@@ -334,30 +328,6 @@ public class Drive extends SubsystemBase {
    */
   public void addVisionMeasurement(Pose2d visionPose, double timestamp) {
     m_poseEstimator.addVisionMeasurement(visionPose, timestamp);
-  }
-
-  @AutoLogOutput(key = "Drive/Turn CAN Disconnect")
-  public boolean[] getTurnDisconnect() {
-    int i = 0;
-    for (var module : modules) {
-      turnCANDisconnect[i] = module.getTurnMotorDisconnect();
-      i++;
-    }
-    return turnCANDisconnect;
-  }
-
-  @AutoLogOutput(key = "Drive/Drive CAN Disconnect")
-  public boolean[] getDriveDisconnect() {
-    int i = 0;
-    for (var module : modules) {
-      driveCANDisconnect[i] = module.getDriveMotorDisconnect();
-      i++;
-    }
-    return driveCANDisconnect;
-  }
-
-  public boolean getGyroDisconnect() {
-    return gyroIO.getDisconnect();
   }
 
   public void resetGyro() {

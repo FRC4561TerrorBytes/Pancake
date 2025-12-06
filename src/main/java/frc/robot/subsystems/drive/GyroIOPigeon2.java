@@ -28,7 +28,6 @@ public class GyroIOPigeon2 implements GyroIO {
   private final Pigeon2 pigeon = new Pigeon2(20);
   private final StatusSignal<Angle> yaw = pigeon.getYaw();
   private final StatusSignal<AngularVelocity> yawVelocity = pigeon.getAngularVelocityZWorld();
-  private boolean connected = false;
 
   public GyroIOPigeon2() {
     pigeon.getConfigurator().apply(new Pigeon2Configuration());
@@ -41,17 +40,11 @@ public class GyroIOPigeon2 implements GyroIO {
   @Override
   public void updateInputs(GyroIOInputs inputs) {
     inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
-    connected = inputs.connected;
     inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
   }
 
   public void resetGyro() {
     pigeon.setYaw(0.0);
-  }
-
-  @Override
-  public boolean getDisconnect() {
-    return !connected;
   }
 }

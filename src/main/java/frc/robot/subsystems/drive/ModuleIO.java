@@ -50,12 +50,4 @@ public interface ModuleIO {
   public default TalonFX getDriveTalon() {
     return null;
   }
-
-  public default boolean getDriveMotorDisconnect() {
-    return false;
-  }
-
-  public default boolean getTurnMotorDisconnect() {
-    return false;
-  }
 }

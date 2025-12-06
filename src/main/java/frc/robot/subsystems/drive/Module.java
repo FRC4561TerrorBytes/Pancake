@@ -196,12 +196,4 @@ public class Module {
   public TalonFX getDriveTalon() {
     return io.getDriveTalon();
   }
-
-  public boolean getDriveMotorDisconnect() {
-    return io.getDriveMotorDisconnect();
-  }
-
-  public boolean getTurnMotorDisconnect() {
-    return io.getTurnMotorDisconnect();
-  }
 }
