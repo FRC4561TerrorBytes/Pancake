@@ -89,9 +89,6 @@ public class Drive extends SubsystemBase {
               Amps.of(120).magnitude(),
               1),
           getModuleTranslations());
-  // private final Orchestra m_orchestra = new
-  // Orchestra("verySecretMusicFile.chrp");
-  // ///home/lvuser/deploy/verySecretMusicFile.chrp
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
@@ -105,10 +102,6 @@ public class Drive extends SubsystemBase {
 
   private SwerveDrivePoseEstimator m_poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
-
-  // CHANGE THE NUMBERS IN THE VECTOR BUILDER
-  // private static final Vector<N3> visionMeasurementStdDevs =
-  // VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
 
   public Drive(
       GyroIO gyroIO,
