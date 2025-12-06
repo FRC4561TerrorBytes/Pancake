@@ -67,7 +67,7 @@ public class Module {
     // }
     driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
         driveFeedback = new PIDController(0.05, 0.0, 0.0);
-        turnFeedback = new PIDController(0.25, 0.0, 0.1);
+        turnFeedback = new PIDController(1.5, 0.0, 0.0);
 
     turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
     setBrakeMode(true);
@@ -84,6 +84,9 @@ public class Module {
     if (angleSetpoint != null) {
       io.setTurnVoltage(
           turnFeedback.calculate(inputs.turnAbsolutePosition.getRadians(), angleSetpoint.getRadians()));
+      
+      Logger.recordOutput("MeasuredTurnSetpoint", inputs.turnAbsolutePosition.getRadians());
+      Logger.recordOutput("DesiredTurnSetpoint", angleSetpoint.getRadians());
 
       // Run closed loop drive control
       // Only allowed if closed loop turn control is running
@@ -113,14 +116,14 @@ public class Module {
           new SwerveModuleState(state.speedMetersPerSecond, state.angle), getAngle());
     //state.optimize(getAngle());
     
-    optimized.cosineScale(getAngle());
+    //optimized.cosineScale(getAngle());
     //var optimizedState = state;
 
     // Update setpoints, controllers run in "periodic"
     angleSetpoint = optimized.angle;
     speedSetpoint = optimized.speedMetersPerSecond;
 
-    return state;
+    return optimized;
   }
 
   /** Runs the module with the specified voltage while controlling to zero degrees. */

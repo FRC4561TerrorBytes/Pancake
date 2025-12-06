@@ -113,7 +113,7 @@ public class ModuleIOTBSwerve implements ModuleIO {
 
     turnConfig.idleMode(IdleMode.kBrake);
     turnConfig.voltageCompensation(12.0);
-    turnConfig.inverted(false);
+    turnConfig.inverted(isTurnMotorInverted);
     turnConfig.smartCurrentLimit(20);
     turnSparkMax.configure(
         turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
