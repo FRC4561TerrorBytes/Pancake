@@ -11,22 +11,18 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOTBSwerve;
-import frc.robot.util.NoteVisualizer;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -38,7 +34,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  private final NoteVisualizer visualizer = new NoteVisualizer();
 
   // divides the movement by the value of drive ratio.
   private double driveRatio = 1.0;
@@ -47,50 +42,11 @@ public class RobotContainer {
   // Controllers
   private final CommandXboxController driverController =
       new CommandXboxController(0); // Change when done
-  private final CommandXboxController operatorController =
-      new CommandXboxController(1); // Change when done
-
-  private final CommandXboxController outreachController = new CommandXboxController(2);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  private static final Translation3d blueSpeaker = new Translation3d(0.225, 5.55, 2.1);
-  private boolean autoShootToggle = true;
-
-  public static boolean lobbing = false;
-
   public double rotMultiplier = 1;
-
-  public enum shootPositions {
-    STOW(-12, 0.0),
-    SUBWOOFER(-4.7, 25.0),
-    PODIUM(-8, 25.0),
-    AMP(7.5, 0.0),
-    STAGE(-8.9, 30.0),
-    WING(-9.825, 35.0),
-    CENTER_AUTO_NOTE(-8, 25.0),
-    LOB(-9, 5.0),
-    SOURCE_SIDE_AUTO(-9.375, 30);
-
-    private double shootSpeed;
-    private double shootAngle;
-
-    private shootPositions(double shootAngle, double shootSpeed) {
-      this.shootSpeed = shootSpeed;
-      this.shootAngle = shootAngle;
-    }
-
-    public double getShootSpeed() {
-      return shootSpeed;
-    }
-
-    public double getShootAngle() {
-      return shootAngle;
-    }
-  }
-
-  public static shootPositions shootEnum = shootPositions.SUBWOOFER;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -136,12 +92,6 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // Set up FF characterization routines
-    // autoChooser.addOption(
-    //     "Drive FF Characterization",
-    //     new FeedForwardCharacterization(
-    //         drive, drive::runCharacterizationVolts, drive::getCharacterizationVelocity));
-
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -153,10 +103,6 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    Trigger armAmp = new Trigger(() -> shootEnum == shootPositions.AMP);
-    armAmp
-        .onTrue(new InstantCommand(() -> rotMultiplier = 0.5))
-        .onFalse(new InstantCommand(() -> rotMultiplier = 1));
 
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
@@ -167,11 +113,11 @@ public class RobotContainer {
   }
 
   public void autonomousInit() {
-    // arm.setArmSetpoint(arm.getArmAngleDegrees());
+    
   }
 
   public void teleopInit() {
-    // arm.setArmSetpoint(arm.getArmAngleDegrees());
+    
   }
 
   /**
@@ -182,8 +128,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     if (autoChooser.get() != null) {
       return autoChooser.get();
-      // .beforeStarting(new InstantCommand(() ->
-      // intake.setBarAngle(Constants.INTAKE_LOW_POSITION)));
     }
     return null;
   }
