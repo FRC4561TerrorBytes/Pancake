@@ -22,6 +22,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -113,7 +114,7 @@ public class ModuleIOTBSwerve implements ModuleIO {
 
     turnConfig.idleMode(IdleMode.kBrake);
     turnConfig.voltageCompensation(12.0);
-    turnConfig.inverted(false);
+    turnConfig.inverted(isTurnMotorInverted);
     turnConfig.smartCurrentLimit(20);
     turnSparkMax.configure(
         turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -139,12 +140,6 @@ public class ModuleIOTBSwerve implements ModuleIO {
   public void updateInputs(ModuleIOInputs inputs) {
     BaseStatusSignal.refreshAll(
         drivePosition, driveVelocity, driveAppliedVolts, driveCurrent, turnAbsolutePosition);
-
-    // Report status code to AdvantageAlerts
-    // AlertHandler.reportStatusCodeFault(drivePosition.getStatus(), moduleLabel,
-    // driveMotorDisconnectAlert, driveMotorFirmwareAlert);
-    // AlertHandler.reportSparkMaxFault(moduleLabel, turnSparkMax, turnMotorDisconnectAlert,
-    // turnMotorCurrentAlert);
 
     // Drive motor inputs
     inputs.drivePositionRad =

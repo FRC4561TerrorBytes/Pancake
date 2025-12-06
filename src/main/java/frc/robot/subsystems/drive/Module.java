@@ -35,7 +35,6 @@ public class Module {
   private final PIDController turnFeedback;
   private Rotation2d angleSetpoint = null; // Setpoint for closed loop control, null for open loop
   private Double speedSetpoint = null; // Setpoint for closed loop control, null for open loop
-  private Rotation2d turnRelativeOffset = null; // Relative + Offset = Absolute
   private double lastPositionMeters = 0.0; // Used for delta calculation
 
   public Module(ModuleIO io, int index) {
@@ -46,6 +45,10 @@ public class Module {
     // separate robot with different tuning)
     switch (Constants.currentMode) {
       case REAL:
+        driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
+        driveFeedback = new PIDController(0.05, 0.0, 0.0);
+        turnFeedback = new PIDController(4, 0.0, 0.0);
+        break;
       case REPLAY:
         driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
         driveFeedback = new PIDController(0.05, 0.0, 0.0);
@@ -62,6 +65,7 @@ public class Module {
         turnFeedback = new PIDController(1.8, 0.0, 0.1);
         break;
     }
+    
 
     turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
     setBrakeMode(true);
@@ -73,14 +77,11 @@ public class Module {
 
     // On first cycle, reset relative turn encoder
     // Wait until absolute angle is nonzero in case it wasn't initialized yet
-    if (turnRelativeOffset == null && inputs.turnAbsolutePosition.getRadians() != 0.0) {
-      turnRelativeOffset = inputs.turnAbsolutePosition.minus(inputs.turnPosition);
-    }
 
     // Run closed loop turn control
     if (angleSetpoint != null) {
       io.setTurnVoltage(
-          turnFeedback.calculate(getAngle().getRadians(), angleSetpoint.getRadians()));
+          turnFeedback.calculate(inputs.turnAbsolutePosition.getRadians(), angleSetpoint.getRadians()));
 
       // Run closed loop drive control
       // Only allowed if closed loop turn control is running
@@ -105,13 +106,15 @@ public class Module {
   public SwerveModuleState runSetpoint(SwerveModuleState state) {
     // Optimize state based on current angle
     // Controllers run in "periodic" when the setpoint is not null
-    var optimizedState = SwerveModuleState.optimize(state, getAngle());
+    SwerveModuleState optimized = 
+      SwerveModuleState.optimize(
+          new SwerveModuleState(state.speedMetersPerSecond, state.angle), getAngle());
 
     // Update setpoints, controllers run in "periodic"
-    angleSetpoint = optimizedState.angle;
-    speedSetpoint = optimizedState.speedMetersPerSecond;
+    angleSetpoint = optimized.angle;
+    speedSetpoint = optimized.speedMetersPerSecond;
 
-    return optimizedState;
+    return optimized;
   }
 
   /** Runs the module with the specified voltage while controlling to zero degrees. */
@@ -142,11 +145,7 @@ public class Module {
 
   /** Returns the current turn angle of the module. */
   public Rotation2d getAngle() {
-    if (turnRelativeOffset == null) {
-      return new Rotation2d();
-    } else {
-      return inputs.turnPosition.plus(turnRelativeOffset);
-    }
+    return inputs.turnAbsolutePosition;
   }
 
   /** Returns the current drive position of the module in meters. */
@@ -187,13 +186,5 @@ public class Module {
 
   public TalonFX getDriveTalon() {
     return io.getDriveTalon();
-  }
-
-  public boolean getDriveMotorDisconnect() {
-    return io.getDriveMotorDisconnect();
-  }
-
-  public boolean getTurnMotorDisconnect() {
-    return io.getTurnMotorDisconnect();
   }
 }
